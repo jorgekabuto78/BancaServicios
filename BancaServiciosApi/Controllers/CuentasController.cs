@@ -24,7 +24,7 @@ namespace BancaServiciosApi.Controllers
         [HttpGet]
         public async Task<ActionResult> Get(int cuentaId)
         {
-            var cuenta = this.context.Cuentas.Include(c => c.Cliente).Where(c => c.CuentaId == cuentaId).FirstOrDefault();
+            var cuenta = await this.context.Cuentas.Include(c => c.Cliente).Where(c => c.CuentaId == cuentaId).FirstOrDefaultAsync();
 
             if (cuenta == null)
             {
@@ -39,7 +39,7 @@ namespace BancaServiciosApi.Controllers
         [HttpGet("ObtenerCuentasActivas")]
         public async Task<ActionResult> ObtenerCuentasActivas()
         {
-            var cuentas = this.context.Cuentas.Where(c => c.Estado.Equals(true)).FirstOrDefault();
+            var cuentas = await this.context.Cuentas.Where(c => c.Estado.Equals(true)).FirstOrDefaultAsync();
 
             if (cuentas == null)
             {
@@ -54,7 +54,7 @@ namespace BancaServiciosApi.Controllers
         [HttpPost("{clienteId:int}")]
         public async Task<ActionResult<CuentaDTO>> Post([FromRoute]int clienteId, [FromBody] CuentaDTO cuentaDTO)
         {
-            bool existeCliente = this.context.Clientes.Any(c => c.ClienteId == clienteId);
+            bool existeCliente = await this.context.Clientes.AnyAsync(c => c.ClienteId == clienteId);
 
             if (!existeCliente)
             {
@@ -105,7 +105,7 @@ namespace BancaServiciosApi.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete(int cuentaId)
         {
-            var existeCuenta = this.context.Cuentas.Any(c => c.CuentaId == cuentaId);
+            var existeCuenta = await this.context.Cuentas.AnyAsync(c => c.CuentaId == cuentaId);
 
             if (existeCuenta)
             {

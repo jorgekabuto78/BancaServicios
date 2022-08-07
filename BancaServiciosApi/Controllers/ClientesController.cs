@@ -20,7 +20,7 @@ namespace BancaServiciosApi.Controllers
         [HttpGet]
         public async Task<ActionResult> Get(int clienteId)
         {
-            var cliente = this.context.Clientes.Where(c => c.ClienteId == clienteId).FirstOrDefault();
+            var cliente = await this.context.Clientes.Where(c => c.ClienteId == clienteId).FirstOrDefaultAsync();
 
             if (cliente != null)
             {
@@ -35,7 +35,7 @@ namespace BancaServiciosApi.Controllers
         [HttpGet("ObtenerClientesActivos")]
         public async Task<ActionResult<List<Cliente>>> ObtenerClientesActivos()
         {
-            var clientes = this.context.Clientes.Where(c => c.Estado.Equals(true)).ToList();
+            var clientes = await this.context.Clientes.Where(c => c.Estado.Equals(true)).ToListAsync();
 
             if (clientes != null)
             {
@@ -71,11 +71,11 @@ namespace BancaServiciosApi.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete(int clienteId)
         {
-            var existeCliente = this.context.Clientes.Any(c => c.ClienteId == clienteId);
+            var existeCliente = await this.context.Clientes.AnyAsync(c => c.ClienteId == clienteId);
 
             if (existeCliente)
             {
-                var cliente = this.context.Clientes.Where(c => c.ClienteId == clienteId).FirstOrDefault();
+                var cliente = await this.context.Clientes.Where(c => c.ClienteId == clienteId).FirstOrDefaultAsync();
                 this.context.Clientes.Remove(cliente);
                 await this.context.SaveChangesAsync();
                 return NoContent();

@@ -24,7 +24,7 @@ namespace BancaServiciosApi.Controllers
         [HttpGet]
         public async Task<ActionResult> Get(int movimientoId)
         {
-            var movimiento = this.context.Movimientos.Include(m => m.Cuenta).Where(m => m.MovimientoId == movimientoId).FirstOrDefault();
+            var movimiento = await this.context.Movimientos.Include(m => m.Cuenta).Where(m => m.MovimientoId == movimientoId).FirstOrDefaultAsync();
 
             if (movimiento == null)
             {
@@ -39,7 +39,7 @@ namespace BancaServiciosApi.Controllers
         [HttpGet("ObtenerMovimientos")]
         public async Task<ActionResult> ObtenerMovimientos()
         {
-            var movimientos = this.context.Movimientos.ToList();
+            var movimientos = await this.context.Movimientos.ToListAsync();
 
             if (movimientos == null)
             {
@@ -54,7 +54,7 @@ namespace BancaServiciosApi.Controllers
         [HttpPost("Registrar/{cuentaId:int}")]
         public async Task<ActionResult> Post([FromRoute]int cuentaId, [FromBody] MovimientoDTO movimientoDTO)
         {
-            var cuenta = this.context.Cuentas.Include(c => c.Cliente).Where(c => c.CuentaId == cuentaId).FirstOrDefault();
+            var cuenta = await this.context.Cuentas.Include(c => c.Cliente).Where(c => c.CuentaId == cuentaId).FirstOrDefaultAsync();
 
             if (cuenta == null)
             {
@@ -98,11 +98,11 @@ namespace BancaServiciosApi.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete(int movimientoId)
         {
-            var existeMovimiento = this.context.Movimientos.Any(m => m.MovimientoId == movimientoId);
+            var existeMovimiento = await this.context.Movimientos.AnyAsync(m => m.MovimientoId == movimientoId);
 
             if (existeMovimiento)
             {
-                var movimiento = this.context.Movimientos.Where(m => m.MovimientoId == movimientoId).FirstOrDefault();
+                var movimiento = await this.context.Movimientos.Where(m => m.MovimientoId == movimientoId).FirstOrDefaultAsync();
                 this.context.Movimientos.Remove(movimiento);
                 await this.context.SaveChangesAsync();
                 return Ok();
